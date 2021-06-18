@@ -1,0 +1,129 @@
+#------------------------------------------------------------------------------
+# D085 - Automation Script
+# Written by: Teodulfo Espero
+#             BS Cloud and Systems Administration
+# Date written: June 16 2021
+# Description:
+#   --  The following script will be used to automatically spin up the VM 
+#       instances that SparkIT Game Company will be needing
+#------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------
+# START
+
+
+driver:
+  #----------------------------------------------------------------------------
+  # Vagrant - for this script we will be using vagrant to build and manage
+  #           our VM environment
+  #----------------------------------------------------------------------------
+  name: vagrant
+
+  #----------------------------------------------------------------------------
+  # public_network - this will allow us to make a second interface that will
+  #                 allow our VM to make contact to another VM
+  #----------------------------------------------------------------------------
+  network:
+    - ["public_network"] 
+
+  #----------------------------------------------------------------------------
+  # we need this section to tailor the RAM requirements 
+  #----------------------------------------------------------------------------
+  customize:
+    memory: 512 
+
+#------------------------------------------------------------------------------
+# chef_zero - allows us to run an memory only chef server
+#------------------------------------------------------------------------------
+provisioner:
+  name: chef_zero
+  product_name: chef
+  product_version: 14.12.9
+
+#------------------------------------------------------------------------------
+# verifier - defines the app that will be used in during automated tests
+#------------------------------------------------------------------------------
+verifier:
+  name: inspec
+
+#------------------------------------------------------------------------------
+# platforms - this is where we define the target OS that we will be using for 
+#              our VMs
+#------------------------------------------------------------------------------
+platforms:
+  - name: centos-7
+
+#------------------------------------------------------------------------------
+# This is our actual VM Definition:
+#     name - defines the VM instance's name
+#     vm_hostname - the hostname used by the instance
+#     run_list - defines the recipe to be used by the VM
+#------------------------------------------------------------------------------
+suites:
+
+  #----------------------------------------------------------------------------
+  - name: core-srvr01
+    driver:
+      vm_hostname: core-srvr01.SparkIT-Games.com
+    run_list:
+      - recipe[learn_chef_httpd::default]
+    attributes:
+
+  #----------------------------------------------------------------------------
+  - name: web-frnt-srvr
+    driver:
+      vm_hostname: web-frnt-srvr.SparkIT-Games.com
+    run_list:
+      - recipe[learn_chef_httpd::default]
+    attributes:
+
+  #----------------------------------------------------------------------------
+  - name: web-back-srvr
+    driver:
+      vm_hostname: web-back-srvr.SparkIT-Games.com
+    run_list:
+      - recipe[learn_chef_httpd::default]
+    attributes:
+  
+  #----------------------------------------------------------------------------
+  - name: db-srvr
+    driver:
+      vm_hostname: db-srvr.SparkIT-Games.com
+    run_list:
+      - recipe[learn_chef_httpd::default]
+    attributes:
+
+  #----------------------------------------------------------------------------
+  - name: micro-pymnt-srvr
+    driver:
+      vm_hostname: micro-pymnt-srvr.SparkIT-Games.com
+    run_list:
+      - recipe[learn_chef_httpd::default]
+    attributes:
+
+  #----------------------------------------------------------------------------
+  - name: coop-play-core-srvr
+    driver:
+      vm_hostname: coop-play-core-srvr.SparkIT-Games.com
+    run_list:
+      - recipe[learn_chef_httpd::default]
+    attributes:
+  
+  #----------------------------------------------------------------------------
+  - name: coop-play-gw-srvr
+    driver:
+      vm_hostname: coop-play-gw-srvr.SparkIT-Games.com
+    run_list:
+      - recipe[learn_chef_httpd::default]
+    attributes:
+
+  #----------------------------------------------------------------------------
+  - name: coop-play-env-srvr
+    driver:
+      vm_hostname: coop-play-env-srvr.SparkIT-Games.com
+    run_list:
+      - recipe[learn_chef_httpd::default]
+    attributes:
+
+#------------------------------------------------------------------------------
+# END
